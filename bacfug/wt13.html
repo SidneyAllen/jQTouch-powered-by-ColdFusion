@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>wt12 - AJAX Submit and Update DOM</title>
+	
+		<style type="text/css" media="screen">@import "assets/jqtouch/jqtouch.css";</style>
+		<style type="text/css" media="screen">@import "assets/themes/apple/theme.css";</style>
+      
+        <script src="assets/jqtouch/jquery.1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="assets/jqtouch/jqtouch.js" type="application/x-javascript" charset="utf-8"></script>
+		<script src="assets/js/json2.js" type="application/x-javascript" charset="utf-8"></script>
+	
+		<script type="text/javascript" charset="utf-8">
+		    var jQT = new $.jQTouch({
+				fullscreen: true,
+				icon: 'assets/images/Icon.png',
+				startupScreen: 'assets/images/startup.png',
+    	        addGlossToIcon: true,
+        	    statusBar: 'black',
+            	useFastTouch: true,
+           	 	slideSelector: 'ul li a',
+			    touchSelector: 'img.swipe',
+				preloadImages: [
+        		'themes/apple/img/back_button.png'
+        		]					
+			});
+			
+			$(document).ready(function(){
+				
+				var contactArray = new Array(0);
+				setContactArray(contactArray);
+				
+				function getContactArray() {
+					return JSON.parse(localStorage.getItem('contactArray'));
+				}
+				
+				function setContactArray(param) {
+					localStorage.setItem('contactArray', JSON.stringify(param));
+				}
+				
+				
+				$('#home .add').bind('click', function(e, info){
+					jQT.goTo('#add','slideup');
+				});
+				
+				$('#add .whiteButton').bind('click', function(e, info){
+					var firstName = $('#FirstName').val();
+					var lastName = $('#LastName').val();
+					
+					$('#LastName').val("");
+					$('#FirstName').val("");
+					
+					var dataString = '&FirstName=' +  firstName + '&LastName=' + lastName ;
+					
+					$('#home ul.edgetoedge').append('<li class="arrow">' + firstName  +' ' + lastName + '</li>');
+					
+					
+					var tempArray;
+					var contactArray = getContactArray();
+					
+					tempArray = {	firstName : firstName,
+									lastName : lastName
+								};
+					contactArray.push(tempArray);
+				
+					setContactArray(contactArray);
+										
+					jQT.goBack();
+				});
+			});
+			
+		</script>
+	</head>
+	
+	<body>
+		<div id="jqt" class="fullscreen"  > 
+			<div id="home">
+				<div class="toolbar"><h1>Contacts</h1><a href="#add" class="add">+</a></div>
+				<ul class="edgetoedge">
+ 				</ul>
+			</div>
+			
+			<div id="add">
+				<div class="toolbar"><a href="#" class="back">Back</a><h1>Add Contact</h1></div>
+				<ul>
+					<li><input type="text" id="FirstName" name="FirstName" placeholder="First Name"></li>
+					<li><input type="text" id="LastName" name="LastName" placeholder="Last Name"></li>
+ 				</ul>
+				<div align="center">
+					<div  id="saveContact" class="whiteButton">Save</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
